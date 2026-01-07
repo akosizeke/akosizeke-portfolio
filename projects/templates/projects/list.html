@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="tl">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mga Proyekto</title>
+    <title>Projects</title>
     <style>
         :root {
             --bg: #0f172a;
@@ -69,10 +69,10 @@
         <header>
             <div>
                 <p class="muted">Portfolio</p>
-                <h1>Mga Proyekto</h1>
-                <p>Tignan ang listahan ng mga gawa para madaling baguhin at dagdagan.</p>
+                <h1>Projects</h1>
+                <p>See the project list so you can update or add easily.</p>
             </div>
-            <a href="/" aria-label="Bumalik sa home">← Bumalik</a>
+            <a href="/" aria-label="Back to home">← Back</a>
         </header>
 
         <div class="grid" style="margin-top: 28px;">
@@ -89,16 +89,16 @@
                         <p class="muted">{{ project.tech_stack }}</p>
                     {% endif %}
                     <div style="display:flex;gap:12px;flex-wrap:wrap;">
-                        {% if project.live_url %}
+                        {% if project.live_url and project.live_url != "#" %}
                             <a href="{{ project.live_url }}" target="_blank" rel="noreferrer">Live</a>
                         {% endif %}
-                        {% if project.repo_url %}
+                        {% if project.repo_url and project.repo_url != "#" %}
                             <a href="{{ project.repo_url }}" target="_blank" rel="noreferrer">Repo</a>
                         {% endif %}
                     </div>
                 </div>
             {% empty %}
-                <p class="muted">Wala pang projects. Magdagdag sa admin o sa data migration.</p>
+                <p class="muted">No projects yet. Add via admin or data migration.</p>
             {% endfor %}
         </div>
     </div>

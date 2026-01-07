@@ -11,7 +11,7 @@ def home(request):
         projects = [
             {
                 "title": "GovHire",
-                "description": "Portal para sa mabilis na paghanap at pag-post ng government job openings.",
+                "description": "Portal for quickly finding and posting government job openings.",
                 "live_url": "https://govhire.example.com",
                 "repo_url": "https://github.com/akosizeke/govhire",
                 "tech_stack": "Django, Postgres, Tailwind",
@@ -19,9 +19,9 @@ def home(request):
             },
             {
                 "title": "Face Recognition Attendance Monitoring",
-                "description": "Attendance system na gumagamit ng face recognition para sa mabilis na log-in.",
+                "description": "Attendance system that uses face recognition for fast log-ins.",
                 "live_url": "https://fr-attendance.example.com",
-                "repo_url": "https://github.com/akosizeke/face-recognition-attendance",
+                "repo_url": "https://github.com/akosizeke/face-recognition-live-attendance-monitoring",
                 "tech_stack": "Python, OpenCV, Django",
                 "featured": False,
             },
@@ -36,8 +36,8 @@ def home(request):
         "avatar_url": "",
         "profile_image": "portfolio/IMG_9986.JPG",
         "intro": (
-            "Mahilig ako gumawa ng malilinis na website at simple pero solid na "
-            "karanasan para sa mga gumagamit."
+            "I build clean, reliable web experiences with a focus on simple but solid "
+            "user journeys."
         ),
         "stats": [
             {"value": "3 months", "label": "Experience"},
