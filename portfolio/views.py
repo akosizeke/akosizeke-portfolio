@@ -30,6 +30,8 @@ def home(request):
     context = {
         "name": "Zeke",
         "role": "Web Developer",
+        "avatar_initials": "Z",
+        "avatar_url": "",
         "intro": (
             "Mahilig ako gumawa ng malilinis na website at simple pero solid na "
             "karanasan para sa mga gumagamit."
