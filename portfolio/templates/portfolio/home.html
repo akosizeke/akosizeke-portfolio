@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="tl">
+{% load static %}
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +26,26 @@
             margin: 0 auto;
             padding: 48px 20px 64px;
         }
-        header { display: flex; align-items: center; gap: 18px; }
+        header { display: grid; grid-template-columns: minmax(280px, 1fr) 1fr; gap: 24px; align-items: center; }
+        .profile-card {
+            background: linear-gradient(145deg, #111827, #0c1426);
+            border-radius: 24px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 280px;
+        }
+        .profile-img {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 18px;
+            object-fit: cover;
+            background: radial-gradient(circle at 30% 30%, #22d3ee, #0ea5e9 60%, #0f172a);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+        }
         .avatar {
             width: 76px;
             height: 76px;
@@ -113,6 +133,28 @@
             transition: color 140ms ease, opacity 140ms ease;
         }
         a:hover { text-decoration: underline; opacity: 0.85; }
+        .hero-title { margin: 0; font-size: 32px; }
+        .hero-accent {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: 0.4px;
+            color: #58c4ff;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .stat {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+        .stat-value { font-size: 20px; font-weight: 800; color: var(--accent); }
+        .stat-label { color: var(--muted); font-size: 13px; margin-top: 4px; }
         footer {
             margin-top: 28px;
             display: flex;
@@ -128,24 +170,34 @@
         }
         @media (max-width: 720px) {
             h1 { font-size: 28px; }
-            header { flex-direction: column; align-items: flex-start; }
+            header { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="shell">
         <header>
-            <div class="avatar">
-                {% if avatar_url %}
-                    <img src="{{ avatar_url }}" alt="{{ name }} avatar">
+            <div class="profile-card">
+                {% if profile_image %}
+                    <img class="profile-img" src="{% static profile_image %}" alt="{{ name }} profile photo">
                 {% else %}
-                    <span>{{ avatar_initials }}</span>
+                    <div class="avatar" style="width:100px;height:100px;font-size:36px;">{{ avatar_initials }}</div>
                 {% endif %}
             </div>
             <div>
                 <div class="badge"><span class="dot"></span><span>{{ role }}</span></div>
-                <h1>Kumusta, ako si {{ name }}</h1>
+                <h1 class="hero-title">Kumusta, ako si {{ name }}</h1>
+                <div class="hero-accent">{{ last_name_accent|upper }}</div>
+                <p style="font-weight:700; margin:12px 0 10px;">{{ headline }}</p>
                 <p>{{ intro }}</p>
+                <div class="stat-grid">
+                    {% for stat in stats %}
+                        <div class="stat">
+                            <div class="stat-value">{{ stat.value }}</div>
+                            <div class="stat-label">{{ stat.label }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </header>
 
@@ -176,10 +228,10 @@
                             <p style="color: var(--muted); font-size: 14px;">{{ project.tech_stack }}</p>
                         {% endif %}
                         <div class="links">
-                            {% if project.live_url %}
+                            {% if project.live_url and project.live_url != "#" %}
                                 <a href="{{ project.live_url }}" target="_blank" rel="noreferrer">Live</a>
                             {% endif %}
-                            {% if project.repo_url %}
+                            {% if project.repo_url and project.repo_url != "#" %}
                                 <a href="{{ project.repo_url }}" target="_blank" rel="noreferrer">Repo</a>
                             {% endif %}
                         </div>
