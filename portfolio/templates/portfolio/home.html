@@ -5,253 +5,618 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ name }} | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #111827;
-            --accent: #22d3ee;
-            --muted: #94a3b8;
+            --bg: #f3f6fb;
+            --surface: #ffffff;
+            --subtle: #eef2ff;
+            --primary: #3c4bff;
+            --primary-strong: #2b2acb;
+            --muted: #6b7280;
+            --text: #0f172a;
+            --border: #e5e7eb;
+            --shadow: 0 18px 40px rgba(31, 41, 55, 0.12);
+        }
+        body.dark {
+            --bg: #0b1220;
+            --surface: #0f172a;
+            --subtle: #1e293b;
+            --primary: #7aa2ff;
+            --primary-strong: #9fb5ff;
+            --muted: #cbd5e1;
             --text: #e2e8f0;
+            --border: #1f2937;
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
-            background: radial-gradient(circle at 20% 20%, #0b1224, #0f172a 40%), #0f172a;
+            font-family: "Poppins", "Space Grotesk", "Inter", system-ui, -apple-system, sans-serif;
+            background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
+            font-size: 14px;
         }
-        .shell {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 48px 20px 64px;
-        }
-        header { display: grid; grid-template-columns: minmax(280px, 1fr) 1fr; gap: 24px; align-items: center; }
-        .profile-card {
-            background: linear-gradient(145deg, #111827, #0c1426);
-            border-radius: 24px;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .page { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 28px 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 280px;
+            flex-direction: column;
+            gap: 28px;
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
+            height: 100vh;
+            transition: box-shadow 180ms ease;
         }
-        .profile-img {
-            width: 100%;
-            aspect-ratio: 4 / 5;
-            border-radius: 18px;
-            object-fit: cover;
-            background: radial-gradient(circle at 30% 30%, #22d3ee, #0ea5e9 60%, #0f172a);
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
-        }
-        .avatar {
-            width: 76px;
-            height: 76px;
+        .sidebar:hover { box-shadow: 8px 0 32px rgba(31, 41, 55, 0.12); }
+        .profile-shell { text-align: center; }
+        .avatar-frame {
+            width: 112px;
+            height: 112px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #22d3ee, #0ea5e9 60%, #0f172a);
+            background: linear-gradient(135deg, #f5f7ff, #e3e7ff);
+            margin: 0 auto 12px;
+            overflow: hidden;
+            border: 3px solid var(--surface);
+            box-shadow: 0 18px 40px rgba(60, 75, 255, 0.15);
+            display: grid;
+            place-items: center;
+            color: var(--primary-strong);
+            font-weight: 800;
+            font-size: 36px;
+        }
+        .avatar-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .profile-name { font-weight: 800; font-size: 18px; margin: 0; display: inline-flex; align-items: center; gap: 6px; }
+        .verified-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #0b1224;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: #ffffff;
+            font-size: 12px;
             font-weight: 800;
-            font-size: 28px;
-            box-shadow: 0 16px 40px rgba(34, 211, 238, 0.35);
-            border: 2px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+        }
+        .profile-role { margin: 4px 0 6px; color: var(--muted); font-weight: 600; font-size: 13px; }
+        .profile-email { font-size: 13px; display: block; margin-top: 4px; color: var(--primary); word-break: break-all; }
+        .nav { display: flex; flex-direction: column; gap: 10px; }
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            color: var(--text);
+            border: 1px solid transparent;
+            transition: all 160ms ease;
+        }
+        .nav a span { font-size: 14px; }
+        .nav a.active,
+        .nav a:hover {
+            background: var(--subtle);
+            color: var(--primary-strong);
+            border-color: #dfe3ff;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        body.dark .nav a.active,
+        body.dark .nav a:hover {
+            border-color: #334155;
+        }
+        .sidebar-note {
+            margin-top: auto;
+            font-size: 13px;
+            color: var(--muted);
+            padding: 12px;
+            border-radius: 12px;
+            background: #f8faff;
+            border: 1px solid var(--border);
+        }
+        body.dark .sidebar-note { background: #111827; }
+        .sidebar-note .label { color: var(--primary-strong); font-weight: 700; margin-bottom: 6px; display: block; }
+        .theme-toggle {
+            border: 1px solid var(--border);
+            background: var(--subtle);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 160ms ease;
+        }
+        .theme-toggle:hover { filter: brightness(0.98); box-shadow: 0 8px 22px rgba(31, 41, 55, 0.12); transform: translateY(-1px); }
+        .main { flex: 1; padding: 48px 40px 96px; }
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(240px, 0.95fr) 1fr;
+            gap: 28px;
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            transition: box-shadow 180ms ease, transform 180ms ease;
+        }
+        .hero:hover { transform: translateY(-4px); box-shadow: 0 22px 70px rgba(31, 41, 55, 0.22); }
+        .hero-img-wrap {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: linear-gradient(135deg, #dfe4ff, #f3f6ff);
+            min-height: 420px;
+            max-height: 520px;
+            transition: transform 180ms ease;
+        }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 65%; display: block; transition: transform 200ms ease; }
+        .hero-img-wrap:hover .hero-img { transform: scale(1.02); }
+        .hero-copy .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: var(--subtle);
+            color: var(--primary-strong);
+            font-weight: 700;
+            border: 1px solid #dfe3ff;
+        }
+        .hero-title { margin: 14px 0 12px; font-size: 32px; font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; }
+        .hero-title .accent {
+            display: block;
+            color: var(--primary-strong);
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            text-underline-offset: 4px;
+            margin-top: 4px;
+        }
+        .hero-sub { margin: 0 0 12px; font-weight: 700; color: var(--text); }
+        .hero-intro { margin: 0 0 18px; color: var(--muted); line-height: 1.6; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 18px; }
+        .stat {
+            background: #f7f8ff;
+            border: 1px solid #e4e7ff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transition: transform 140ms ease, box-shadow 140ms ease;
+        }
+        .stat:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(31, 41, 55, 0.16); }
+        .stat-value { font-size: 18px; font-weight: 800; color: var(--primary-strong); }
+        .stat-label { color: var(--muted); font-size: 12px; margin-top: 4px; }
+        .section { margin-top: 56px; }
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 22px;
+            align-items: center;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            position: relative;
+            padding-bottom: 6px;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 120px;
+            height: 3px;
+            border-radius: 999px;
+            background: #3b5bdb;
+        }
+        .section-sub { margin: 0; color: var(--muted); font-size: 14px; }
+        .triple-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            align-items: start;
+            margin-top: 18px;
+        }
+        .pillar { display: flex; flex-direction: column; gap: 12px; }
+        .pillar-heading { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--text); }
+        .meta-line { color: var(--muted); font-size: 13px; }
+        .masonry-card {
+            background: var(--surface);
+            border-radius: 18px;
+            border: 1px solid #e6e8f0;
+            box-shadow: 0 8px 30px rgba(31, 41, 55, 0.08);
+            padding: 18px 18px 16px;
+            transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+        }
+        .masonry-card + .masonry-card { margin-top: 16px; }
+        .masonry-card:hover { transform: translateY(-4px); box-shadow: 0 16px 44px rgba(31, 41, 55, 0.18); border-color: #d0d5eb; }
+        .masonry-card h3 { margin: 0 0 10px; font-size: 16px; font-weight: 800; }
+        .masonry-card p { margin: 0; color: var(--muted); line-height: 1.6; font-size: 13px; }
+        .logo-blob {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f2f5ff, #dfe4ff);
+            display: grid;
+            place-items: center;
+            color: var(--primary-strong);
+            font-weight: 800;
+            font-size: 15px;
+            border: 1px solid #e2e6ff;
             overflow: hidden;
         }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .logo-blob img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .badge-soft {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: var(--primary-strong);
+            font-weight: 700;
+            border: 1px solid #e2e6ff;
+            font-size: 11px;
+            transition: transform 140ms ease, box-shadow 140ms ease;
+        }
+        .badge-soft:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(60, 75, 255, 0.18); }
+        .edu-card h3 { margin-bottom: 4px; }
+        .edu-program { font-weight: 600; color: #4b5563; margin-bottom: 10px; font-size: 13px; }
+        .edu-highlight {
+            background: #fff8eb;
+            border: 1px solid #fde6ba;
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: #92400e;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .connect-card p { margin: 0 0 12px; color: var(--muted); line-height: 1.5; font-size: 13px; }
+        .cta-buttons { display: flex; flex-direction: column; gap: 8px; }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            border: none;
+            text-decoration: none;
+            font-size: 13px;
+            transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+        }
+        .cta-btn:hover { opacity: 0.9; text-decoration: none; }
+        .cta-btn:active { transform: translateY(1px); }
+        .cta-btn.linkedin { background: #0a66c2; }
+        .cta-btn.github { background: #111827; }
+        .cta-btn.email { background: #16a34a; }
+        .cta-btn.resume { background: #dc2626; }
+        .exp-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #e8f7ec;
+            border: 1px solid #c0ebcf;
+            color: #1f7a3d;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .tech-tag {
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: #f3f5ff;
+            border: 1px solid #e4e7ff;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 12px;
+            transition: all 140ms ease;
+        }
+        .tech-tag:hover { transform: translateY(-2px); border-color: #cbd3ff; box-shadow: 0 10px 22px rgba(31, 41, 55, 0.12); }
+        .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .bullet-list { margin: 8px 0 16px; padding-left: 18px; color: var(--muted); line-height: 1.5; font-size: 13px; }
+        .category-title { font-weight: 800; color: var(--text); margin-bottom: 6px; font-size: 14px; }
+        .masonry {
+            column-count: 2;
+            column-gap: 22px;
+        }
+        .masonry .masonry-card { margin-bottom: 28px; }
+        .project-card { break-inside: avoid; }
+        .project-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .project-title { font-weight: 800; font-size: 16px; margin: 0; }
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: rgba(34, 211, 238, 0.08);
-            color: var(--accent);
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            border: 1px solid rgba(34, 211, 238, 0.3);
-        }
-        h1 { margin: 8px 0 12px; font-size: 32px; }
-        h2 { margin: 0 0 12px; font-size: 22px; }
-        p { margin: 0; color: var(--muted); line-height: 1.6; }
-        .card {
-            background: linear-gradient(145deg, var(--card), #0c1426);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-            transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
-            border-color: rgba(34, 211, 238, 0.12);
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-        }
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .chip {
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--text);
-            font-weight: 600;
-            font-size: 14px;
-            transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
-        }
-        .chip:hover { transform: translateY(-2px); border-color: rgba(34, 211, 238, 0.3); background: rgba(34, 211, 238, 0.08); }
-        .chip-accent {
-            background: rgba(34, 211, 238, 0.12);
-            border-color: rgba(34, 211, 238, 0.5);
-            color: var(--accent);
-        }
-        .project {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .links {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 140ms ease, opacity 140ms ease;
-        }
-        a:hover { text-decoration: underline; opacity: 0.85; }
-        .hero-title { margin: 0; font-size: 32px; }
-        .hero-accent {
-            font-size: 34px;
-            font-weight: 900;
-            letter-spacing: 0.4px;
-            color: #58c4ff;
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-top: 18px;
-        }
-        .stat {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 6px;
+            padding: 8px 10px;
             border-radius: 12px;
-            padding: 12px 14px;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            background: #eef2ff;
+            color: var(--primary-strong);
+            font-weight: 700;
+            border: 1px solid #e2e6ff;
+            font-size: 12px;
+            transition: transform 140ms ease, box-shadow 140ms ease;
         }
-        .stat-value { font-size: 20px; font-weight: 800; color: var(--accent); }
-        .stat-label { color: var(--muted); font-size: 13px; margin-top: 4px; }
-        footer {
-            margin-top: 28px;
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
+        .badge:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(60, 75, 255, 0.15); }
+        .project-desc { color: var(--muted); margin: 8px 0 8px; line-height: 1.5; font-size: 13px; }
+        .project-tech { color: #4b5563; font-size: 13px; margin: 0 0 10px; }
+        .links { display: flex; gap: 10px; flex-wrap: wrap; }
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            background: #f7f8ff;
+            border: 1px solid #e4e7ff;
+            font-weight: 700;
+            color: var(--primary-strong);
+            transition: all 140ms ease;
         }
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 24px rgba(34, 211, 238, 0.6);
+        .pill:hover { transform: translateY(-2px); border-color: #cbd3ff; box-shadow: 0 10px 22px rgba(31, 41, 55, 0.12); }
+        body.dark .masonry-card { background: #0f172a; border-color: #1f2937; }
+        body.dark .stat { background: #111827; border-color: #1f2937; }
+        body.dark .badge-soft { background: #111827; border-color: #1f2937; color: #cbd5e1; }
+        body.dark .chip { background: #111827; border-color: #1f2937; color: #e2e8f0; }
+        body.dark .tech-tag { background: #111827; border-color: #1f2937; color: #e2e8f0; }
+        body.dark .pill { background: #111827; border-color: #1f2937; color: #cbd5e1; }
+        body.dark .cta-btn.github { background: #0f172a; color: #e2e8f0; border: 1px solid #1f2937; }
+        body.dark .cta-btn.linkedin { background: #0d4c95; }
+        body.dark .cta-btn.email { background: #15803d; }
+        body.dark .cta-btn.resume { background: #b91c1c; }
+        body.dark .category-title { color: #e2e8f0; }
+        body.dark .bullet-list { color: #cbd5e1; }
+        @media (max-width: 1180px) {
+            .page { flex-direction: column; }
+            .sidebar {
+                position: relative;
+                width: auto;
+                height: auto;
+                flex-direction: row;
+                align-items: center;
+                gap: 12px;
+                padding: 16px;
+                border-bottom: 1px solid var(--border);
+            }
+            .profile-shell { text-align: left; display: flex; align-items: center; gap: 12px; }
+            .avatar-frame { margin: 0; width: 64px; height: 64px; border-radius: 50%; }
+            .nav { flex-direction: row; flex-wrap: wrap; }
+            .main { padding: 24px; }
+            .hero { grid-template-columns: 1fr; }
         }
-        @media (max-width: 720px) {
-            h1 { font-size: 28px; }
-            header { grid-template-columns: 1fr; }
+        @media (max-width: 820px) {
+            .masonry { column-count: 1; }
+            .section-title { font-size: 22px; }
+            .hero-title { font-size: 30px; }
+            .hero { padding: 18px; }
+            .hero-img-wrap { min-height: 220px; }
         }
     </style>
 </head>
 <body>
-    <div class="shell">
-        <header>
-            <div class="profile-card">
-                {% if profile_image %}
-                    <img class="profile-img" src="{% static profile_image %}" alt="{{ name }} profile photo">
-                {% else %}
-                    <div class="avatar" style="width:100px;height:100px;font-size:36px;">{{ avatar_initials }}</div>
-                {% endif %}
-            </div>
-            <div>
-                <div class="badge"><span class="dot"></span><span>{{ role }}</span></div>
-                <h1 class="hero-title">Hi, I'm {{ name }}</h1>
-                <div class="hero-accent">{{ last_name_accent|upper }}</div>
-                <p style="font-weight:700; margin:12px 0 10px;">{{ headline }}</p>
-                <p>{{ intro }}</p>
-                <div class="stat-grid">
-                    {% for stat in stats %}
-                        <div class="stat">
-                            <div class="stat-value">{{ stat.value }}</div>
-                            <div class="stat-label">{{ stat.label }}</div>
-                        </div>
-                    {% endfor %}
+    <div class="page">
+        <aside class="sidebar">
+            <div class="profile-shell">
+                <div class="avatar-frame">
+                    {% if profile_image %}
+                        <img src="{% static profile_image %}" alt="{{ name }} profile photo">
+                    {% else %}
+                        {{ avatar_initials }}
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="profile-name">{{ name }} <span class="verified-badge">✓</span></div>
+                    <div class="profile-role">{{ role }}</div>
+                    <a class="profile-email" href="mailto:{{ contact.email }}">{{ contact.email }}</a>
                 </div>
             </div>
-        </header>
-
-        <section style="margin-top: 28px;">
-            <h2>Skills</h2>
-            <div class="card">
-                <div class="chips">
-                    {% for skill in skills %}
-                        <span class="chip">{{ skill }}</span>
-                    {% endfor %}
-                </div>
+            <nav class="nav">
+                <a href="#home" class="active"><span>🏠</span> Home</a>
+                <a href="#experience"><span>💼</span> Experience</a>
+                <a href="#projects"><span>💻</span> Projects</a>
+            </nav>
+            <button class="theme-toggle" type="button" id="themeToggle">🌙 Dark mode</button>
+            <div class="sidebar-note">
+                <span class="label">Dedicated System Developer</span>
+                <div>Building reliable experiences that keep users moving smoothly.</div>
             </div>
-        </section>
+        </aside>
 
-        <section style="margin-top: 28px;">
-            <h2>Projects</h2>
-            <div class="grid">
-                {% for project in projects %}
-                    <div class="card project">
-                        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-                            <strong>{{ project.title }}</strong>
-                            {% if project.featured %}
-                                <span class="chip chip-accent">Featured</span>
-                            {% endif %}
-                        </div>
-                        <p>{{ project.description }}</p>
-                        {% if project.tech_stack %}
-                            <p style="color: var(--muted); font-size: 14px;">{{ project.tech_stack }}</p>
-                        {% endif %}
-                        <div class="links">
-                            {% if project.live_url and project.live_url != "#" %}
-                                <a href="{{ project.live_url }}" target="_blank" rel="noreferrer">Live</a>
-                            {% endif %}
-                            {% if project.repo_url and project.repo_url != "#" %}
-                                <a href="{{ project.repo_url }}" target="_blank" rel="noreferrer">Repo</a>
-                            {% endif %}
+        <main class="main">
+            <section class="hero" id="home">
+                <div class="hero-img-wrap">
+                    {% if profile_image %}
+                        <img class="hero-img" src="{% static profile_image %}" alt="{{ name }} profile">
+                    {% else %}
+                        <div class="avatar-frame" style="width:100%;height:100%;border-radius:0;box-shadow:none;">{{ avatar_initials }}</div>
+                    {% endif %}
+                </div>
+                <div class="hero-copy">
+                    <div class="eyebrow">{{ role }}</div>
+                    <h1 class="hero-title">{{ name }} <span class="accent">{{ last_name_accent|upper }}</span></h1>
+                    <p class="hero-sub">{{ headline }}</p>
+                    <p class="hero-intro">{{ intro }} From system design to full implementation, I deliver optimized, secure, and maintainable solutions that enhance operational performance and support growth.</p>
+                    <div class="stats">
+                        {% for stat in stats %}
+                            <div class="stat">
+                                <div class="stat-value">{{ stat.value }}</div>
+                                <div class="stat-label">{{ stat.label }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="experience">
+                <div class="section-header">
+                    <div class="section-title">Education, Experience & Technical Expertise</div>
+                    <p class="section-sub">My academic background, professional journey, and technical skill set.</p>
+                </div>
+                <div class="triple-grid">
+                    <div class="pillar">
+                        <div class="pillar-heading">📚 Education</div>
+                        {% for edu in education %}
+                            <div class="masonry-card edu-card">
+                                <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;">
+                                    <div class="logo-blob">
+                                        {% if edu.logo_image %}
+                                            <img src="{% static edu.logo_image %}" alt="{{ edu.school }} logo">
+                                        {% else %}
+                                            <span>{{ edu.logo_text }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="meta-line">{{ edu.years }}</div>
+                                        {% if edu.badge %}
+                                            <div class="badge-soft">{{ edu.badge }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <h3>{{ edu.school }}</h3>
+                                <p class="edu-program">{{ edu.program }}</p>
+                                {% if edu.highlight_title %}
+                                    <div class="edu-highlight">
+                                        <strong>{{ edu.highlight_title }}</strong>
+                                        <div>{{ edu.highlight_desc }}</div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="masonry-card connect-card">
+                            <div class="pillar-heading">📩 Connect with me!</div>
+                            <p>I love collaborating on exciting projects, sharing ideas, and connecting with like-minded professionals.</p>
+                            <div class="cta-buttons">
+                                <a class="cta-btn linkedin" href="{{ contact.linkedin }}" target="_blank" rel="noreferrer">🔗 LinkedIn</a>
+                                <a class="cta-btn github" href="{{ contact.github }}" target="_blank" rel="noreferrer">💻 GitHub</a>
+                                <a class="cta-btn email" href="mailto:{{ contact.email }}">✉️ Email</a>
+                                {% if contact.resume_url %}
+                                    <a class="cta-btn resume" href="{{ contact.resume_url }}" target="_blank" rel="noreferrer">📄 Download Resume</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-            <div style="margin-top:12px;">
-                <a href="/projects/">See all projects →</a>
-            </div>
-        </section>
+                    <div class="pillar">
+                        <div class="pillar-heading">💼 Experience</div>
+                        {% for exp in experiences %}
+                            <div class="masonry-card exp-card">
+                                <div class="exp-top">
+                                    <div class="logo-blob">
+                                        {% if exp.logo_image %}
+                                            <img src="{% static exp.logo_image %}" alt="{{ exp.company }} logo">
+                                        {% else %}
+                                            <span>{{ exp.logo_text }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div style="display:flex;gap:8px;align-items:center;">
+                                        <div class="meta-line">{{ exp.period }}</div>
+                                        {% if exp.current %}
+                                            <span class="badge-pill">Current</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <h3>{{ exp.role }}</h3>
+                                <p class="meta-line">{{ exp.company }}{% if exp.team %} • {{ exp.team }}{% endif %}</p>
+                                <p class="project-desc">{{ exp.summary }}</p>
+                                {% if exp.technologies %}
+                                    <div class="chip-row">
+                                        {% for tech in exp.technologies %}
+                                            <span class="tech-tag">{{ tech }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-heading">🧭 Technical Expertise</div>
+                        <div class="masonry-card expertise-card">
+                            {% for category in tech_categories %}
+                                <div style="margin-bottom:10px;">
+                                    <div class="category-title">{{ category.title }}</div>
+                                    <ul class="bullet-list">
+                                        {% for item in category.items %}
+                                            <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <section style="margin-top: 28px;">
-            <h2>Contact</h2>
-            <div class="card">
-                <p>Email: <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
-                <p>LinkedIn: <a href="{{ contact.linkedin }}" target="_blank" rel="noreferrer">{{ contact.linkedin }}</a></p>
-                <p>GitHub: <a href="{{ contact.github }}" target="_blank" rel="noreferrer">{{ contact.github }}</a></p>
-            </div>
-        </section>
+            <section class="section" id="projects">
+                <div class="section-header">
+                    <div class="section-title">Projects</div>
+                    <p class="section-sub">Selected work with a focus on reliability and polish.</p>
+                </div>
+                <div class="masonry">
+                    {% for project in projects %}
+                        <div class="masonry-card project-card">
+                            <div class="project-top">
+                                <p class="project-title">{{ project.title }}</p>
+                                {% if project.featured %}
+                                    <span class="badge">Featured</span>
+                                {% endif %}
+                            </div>
+                            <p class="project-desc">{{ project.description }}</p>
+                            {% if project.tech_stack %}
+                                <p class="project-tech">{{ project.tech_stack }}</p>
+                            {% endif %}
+                            <div class="links">
+                                {% if project.live_url and project.live_url != "#" %}
+                                    <a href="{{ project.live_url }}" target="_blank" rel="noreferrer">Live</a>
+                                {% endif %}
+                                {% if project.repo_url and project.repo_url != "#" %}
+                                    <a href="{{ project.repo_url }}" target="_blank" rel="noreferrer">Repo</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
     </div>
+    <script>
+        (function() {
+            const body = document.body;
+            const toggle = document.getElementById("themeToggle");
+            const stored = localStorage.getItem("theme");
+            if (stored === "dark") {
+                body.classList.add("dark");
+            }
+            function syncLabel() {
+                const isDark = body.classList.contains("dark");
+                toggle.textContent = isDark ? "☀️ Light mode" : "🌙 Dark mode";
+            }
+            toggle.addEventListener("click", () => {
+                body.classList.toggle("dark");
+                const isDark = body.classList.contains("dark");
+                localStorage.setItem("theme", isDark ? "dark" : "light");
+                syncLabel();
+            });
+            syncLabel();
+        })();
+    </script>
 </body>
 </html>
-

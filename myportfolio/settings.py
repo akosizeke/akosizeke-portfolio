@@ -21,17 +21,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--4^x(wjeurf&fv9p)my^^$7$4j)#0139%0xfnkmg3rr_*un3en'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-
 def _env_list(env_var, default=None):
     value = os.environ.get(env_var, "")
     items = [item.strip() for item in value.split(",") if item.strip()]
     return items if items else (default or [])
+
+def _env_bool(env_var, default=False):
+    value = os.environ.get(env_var)
+    if value is None:
+        return default
+    return value.lower() in ("1", "true", "yes", "on")
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "insecure-default-change-me")
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = _env_bool("DJANGO_DEBUG", default=True)
 
 
 ALLOWED_HOSTS = _env_list(
@@ -145,6 +151,8 @@ CSRF_TRUSTED_ORIGINS = _env_list(
     "DJANGO_CSRF_TRUSTED_ORIGINS",
     [
         "http://portfolio.local:8000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
     ],
 )
 
@@ -155,3 +163,13 @@ if WHITENOISE_AVAILABLE:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 else:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
+# Keep dev simple: no forced HTTPS, no proxy SSL header.
+SECURE_PROXY_SSL_HEADER = None
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+SECURE_CONTENT_TYPE_NOSNIFF = False

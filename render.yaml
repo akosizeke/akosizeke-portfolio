@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: myportfolio
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn myportfolio.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "myportfolio.onrender.com,127.0.0.1,localhost"
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://myportfolio.onrender.com"
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: "1"
