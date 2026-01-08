@@ -27,6 +27,39 @@ def home(request):
             },
         ]
 
+    # Build a filmstrip list of 8 items, cycling through available projects.
+    filmstrip = []
+    project_items = list(projects)
+    if project_items:
+        idx = 0
+        while len(filmstrip) < 8:
+            p = project_items[idx % len(project_items)]
+            filmstrip.append(
+                {
+                    "title": getattr(p, "title", "") or (p.get("title") if isinstance(p, dict) else ""),
+                    "description": getattr(p, "description", "") or (p.get("description") if isinstance(p, dict) else ""),
+                    "tag": "Preview",
+                    "image": (
+                        getattr(p, "film_image", "")
+                        or getattr(p, "image", "")
+                        or getattr(p, "image_url", "")
+                        or (p.get("film_image") if isinstance(p, dict) else "")
+                        or (p.get("image") if isinstance(p, dict) else "")
+                        or ""
+                    ),
+                }
+            )
+            idx += 1
+    else:
+        filmstrip = [
+            {
+                "title": "Project Preview",
+                "description": "Add your first project to showcase here.",
+                "tag": "Preview",
+                "image": "",
+            }
+        ] * 8
+
     context = {
         "name": "Zeke",
         "last_name_accent": "Refuncion",
@@ -66,7 +99,7 @@ def home(request):
                 "summary": (
                     "Building and maintaining provincial systems with secure, scalable, and user-friendly implementations."
                 ),
-                "technologies": ["Python", "Django", "APIs", "Automation"],
+                "technologies": ["Python", "Django", "APIs", "JavaScript", "System Dev"],
                 "logo_text": "PGB",
                 "logo_image": "portfolio/Official-Logo-1 (1).png",
             }
@@ -108,5 +141,6 @@ def home(request):
             "github": "https://github.com/akosizeke",
             "resume_url": "#",
         },
+        "filmstrip": filmstrip,
     }
     return render(request, "portfolio/home.html", context)
