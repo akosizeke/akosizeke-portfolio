@@ -14,6 +14,7 @@ def home(request):
                 "description": "Portal for quickly finding and posting government job openings.",
                 "live_url": "https://govhire-updated.onrender.com/",
                 "repo_url": "https://github.com/akosizeke/govhire",
+                "image": "portfolio/projects/hire-6.png",
                 "tech_stack": "Django, Postgres, Tailwind",
                 "featured": True,
             },
@@ -22,6 +23,7 @@ def home(request):
                 "description": "Attendance system that uses face recognition for fast log-ins.",
                 "live_url": "https://face-recognition-live-attendance.onrender.com/",
                 "repo_url": "https://github.com/akosizeke/face-recognition-live-attendance-monitoring",
+                "image": "portfolio/projects/face-4.png",
                 "tech_stack": "Python, OpenCV, Django",
                 "featured": False,
             },
@@ -31,25 +33,22 @@ def home(request):
     filmstrip = []
     project_items = list(projects)
     if project_items:
-        idx = 0
-        while len(filmstrip) < 8:
-            p = project_items[idx % len(project_items)]
-            filmstrip.append(
-                {
-                    "title": getattr(p, "title", "") or (p.get("title") if isinstance(p, dict) else ""),
-                    "description": getattr(p, "description", "") or (p.get("description") if isinstance(p, dict) else ""),
-                    "tag": "Preview",
-                    "image": (
-                        getattr(p, "film_image", "")
-                        or getattr(p, "image", "")
-                        or getattr(p, "image_url", "")
-                        or (p.get("film_image") if isinstance(p, dict) else "")
-                        or (p.get("image") if isinstance(p, dict) else "")
-                        or ""
-                    ),
-                }
-            )
-            idx += 1
+        # Showcase all available screenshots in the filmstrip.
+        screenshot_pool = [
+            {"title": "GovHire", "description": "Welcome hero and CTA", "image": "portfolio/projects/hire-1.png"},
+            {"title": "Face Recognition", "description": "Attendance overview", "image": "portfolio/projects/face-2.png"},
+            {"title": "GovHire", "description": "Available job cards", "image": "portfolio/projects/hire-2.png"},
+            {"title": "Face Recognition", "description": "Live feed and controls", "image": "portfolio/projects/face-3.png"},
+            {"title": "GovHire", "description": "Recent applications overview", "image": "portfolio/projects/hire-3.png"},
+            {"title": "Face Recognition", "description": "Office roster view", "image": "portfolio/projects/face-4.png"},
+            {"title": "GovHire", "description": "Employer dashboard and listings", "image": "portfolio/projects/hire-4.png"},
+            {"title": "Face Recognition", "description": "Scanner control panel", "image": "portfolio/projects/face-5.png"},
+            {"title": "GovHire", "description": "Profile and account settings", "image": "portfolio/projects/hire-6.png"},
+            {"title": "Face Recognition", "description": "Admin logs dashboard", "image": "portfolio/projects/face-6.png"},
+            {"title": "GovHire", "description": "Job posting list", "image": "portfolio/projects/hire-9.png"},
+            {"title": "Face Recognition", "description": "Employee logs details", "image": "portfolio/projects/face-7.png"},
+        ]
+        filmstrip = screenshot_pool
     else:
         filmstrip = [
             {

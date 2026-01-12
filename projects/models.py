@@ -6,6 +6,9 @@ class Project(models.Model):
     description = models.TextField(blank=True)
     live_url = models.URLField(blank=True)
     repo_url = models.URLField(blank=True)
+    image = models.CharField(
+        max_length=255, blank=True, help_text="Static path or full URL for preview."
+    )
     tech_stack = models.CharField(max_length=200, blank=True)
     featured = models.BooleanField(default=False)
     sort_order = models.PositiveIntegerField(default=0)
