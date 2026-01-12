@@ -4,8 +4,9 @@ from django.db import migrations
 def add_preview_images(apps, schema_editor):
     Project = apps.get_model("projects", "Project")
     updates = {
-        "GovHire": "portfolio/projects/govhire-preview.svg",
-        "Face Recognition Attendance Monitoring": "portfolio/projects/face-recognition-preview.svg",
+        # Use existing screenshot assets instead of non-existent SVG previews.
+        "GovHire": "portfolio/projects/hire-6.png",
+        "Face Recognition Attendance Monitoring": "portfolio/projects/face-4.png",
     }
     for title, image in updates.items():
         Project.objects.filter(title=title).update(image=image)
