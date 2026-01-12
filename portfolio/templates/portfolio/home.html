@@ -39,6 +39,8 @@
             background: var(--bg);
             color: var(--text);
             font-size: 14px;
+            opacity: 0;
+            animation: pageFade 0.9s ease-out forwards;
         }
         a { color: var(--primary); text-decoration: none; }
         a:hover { text-decoration: none; }
@@ -505,6 +507,13 @@
         body.dark .cta-btn.resume { background: #b91c1c; }
         body.dark .category-title { color: #e2e8f0; }
         body.dark .bullet-list { color: #cbd5e1; }
+        @keyframes pageFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body { animation: none; opacity: 1; }
+        }
         @media (max-width: 1180px) {
             .page { flex-direction: column; margin-left: 0; }
             .sidebar-reveal { display: none; }
@@ -757,6 +766,17 @@
         </main>
     </div>
     <script>
+        (function() {
+            if ("scrollRestoration" in history) {
+                history.scrollRestoration = "manual";
+            }
+            window.addEventListener("load", () => {
+                window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+            });
+            window.addEventListener("beforeunload", () => {
+                window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+            });
+        })();
         (function() {
             const body = document.body;
             const toggle = document.getElementById("themeToggle");

@@ -12,7 +12,7 @@ def home(request):
             {
                 "title": "GovHire",
                 "description": "Portal for quickly finding and posting government job openings.",
-                "live_url": "https://govhire.example.com",
+                "live_url": "https://govhire-updated.onrender.com/",
                 "repo_url": "https://github.com/akosizeke/govhire",
                 "tech_stack": "Django, Postgres, Tailwind",
                 "featured": True,
@@ -20,7 +20,7 @@ def home(request):
             {
                 "title": "Face Recognition Attendance Monitoring",
                 "description": "Attendance system that uses face recognition for fast log-ins.",
-                "live_url": "https://fr-attendance.example.com",
+                "live_url": "https://face-recognition-live-attendance.onrender.com/",
                 "repo_url": "https://github.com/akosizeke/face-recognition-live-attendance-monitoring",
                 "tech_stack": "Python, OpenCV, Django",
                 "featured": False,
